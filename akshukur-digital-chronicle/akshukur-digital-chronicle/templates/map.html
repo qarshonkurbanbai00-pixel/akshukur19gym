@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% from "_macros.html" import badge, photo with context %}
+
+{% block title %}Тарихи орындар — ЦИФРЛЫҚ ШЕЖІРЕ{% endblock %}
+
+{% block page_css %}
+<!-- Leaflet CDN: интернет болмаса, map.js ішінде fallback хабарламасы көрсетіледі -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <p class="hero-kicker reveal">Интерактивті карта</p>
+    <h1 class="page-title reveal">Тарихи орындар</h1>
+    <p class="page-lead reveal">Маркерді басыңыз — атауы, фотосы, сипаттамасы мен дереккөзі ашылады. Координатасы расталмаған орындарға жалған маркер қойылмайды — олар тізімде «Координатасы нақтылануда» деп көрсетіледі.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <!-- Санат сүзгісі -->
+    <div class="filter-bar reveal" id="mapFilters">
+      <button class="filter-btn active" data-cat="all">Барлығы</button>
+      {% for cat in categories %}
+      <button class="filter-btn" data-cat="{{ cat }}">{{ cat }}</button>
+      {% endfor %}
+    </div>
+
+    <div class="map-layout">
+      <div class="map-frame glass reveal">
+        <div id="map" aria-label="Ақшұқыр тарихи орындарының картасы"></div>
+        <div class="map-fallback" id="mapFallback" hidden>
+          <h3>Карта жүктелмеді</h3>
+          <p>Интерактивті карта үшін интернет қосылымы қажет (Leaflet CDN + OpenStreetMap тайлдары). Нүктелер тізімі мен ақпараттық карточкалары төменде толық жұмыс істейді.</p>
+        </div>
+      </div>
+      <aside class="map-side reveal">
+        <h3>Нүктелер</h3>
+        <div class="place-list" id="placeList">
+          {% for p in places %}
+          <button type="button" class="place-item glass" data-place="{{ p.id }}"
+                  data-cat="{{ p.category }}"
+                  data-lat="{{ p.lat if p.lat is not none else '' }}"
+                  data-lng="{{ p.lng if p.lng is not none else '' }}">
+            <span class="place-cat place-cat-{{ p.category }}"></span>
+            <span class="place-name">{{ p.name }}</span>
+            {% if p.lat is none %}<span class="place-noloc">координатасы нақтылануда</span>{% endif %}
+          </button>
+          {% endfor %}
+        </div>
+      </aside>
+    </div>
+
+    <!-- Әр орынның жеке ақпараттық карточкасы -->
+    <h2 class="section-title reveal" style="margin-top:50px">Орындар туралы толық</h2>
+    <div class="cards-grid place-cards" id="placeCards">
+      {% for p in places %}
+      <article class="nav-card glass reveal place-card" id="card-{{ p.id }}" data-cat="{{ p.category }}">
+        {{ photo(p.image, p.name, 'Фото қосу қажет') }}
+        <h3>{{ p.name }}</h3>
+        <p class="muted small">{{ p.category_label }} · {% if p.lat is not none %}Координата: {{ p.lat }}, {{ p.lng }}{% else %}Координатасы нақтылануда{% endif %}</p>
+        <p>{{ p.description }}</p>
+        {{ badge(p.evidence) }}
+        {% if p.sources %}
+        <p class="muted small">
+          Дереккөз:
+          {% for sid in p.sources %}<a class="src-chip" href="{{ url_for('sources_page') }}#{{ sid }}">{{ sid }}</a> {% endfor %}
+        </p>
+        {% endif %}
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block page_js %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>
+{% endblock %}

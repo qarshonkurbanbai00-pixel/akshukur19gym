@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% from "_macros.html" import badge with context %}
+
+{% block title %}3D тарихи реконструкция — ЦИФРЛЫҚ ШЕЖІРЕ{% endblock %}
+
+{% block content %}
+<section class="page-hero page-hero-gold">
+  <div class="container">
+    <p class="hero-kicker reveal">{{ evidence_levels['reconstruction'].icon }} 3D тарихи реконструкция</p>
+    <h1 class="page-title reveal">Мешіт / медресе — болжамды көрініс</h1>
+    <p class="page-lead reveal"><strong>Тарихи деректерге сүйенген болжамды көрініс.</strong> Бұл модель сақталған нақты ғимаратты бейнелейтін жоқ — ол зерттеу визуализациясы ғана.</p>
+    <div class="badge-row reveal">{{ badge('reconstruction') }}</div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="viewer-frame glass reveal">
+      <div id="viewer3d" aria-label="3D тарихи реконструкция көрсеткіші"></div>
+      <div class="viewer-fallback" id="viewerFallback" hidden>
+        <h3>3D viewer жүктелмеді</h3>
+        <p>Three.js кітапханасы CDN-нен жүктелмеді (интернет қосылымын тексеріңіз). Сайттың қалған бөлімі жұмыс істей береді.</p>
+      </div>
+      <div class="viewer-hud" id="viewerHud">
+        <span class="hud-chip">🟣 3D тарихи реконструкция</span>
+        <span class="hud-chip">Тарихи деректерге сүйенген болжамды көрініс</span>
+        <span class="hud-chip" id="modelStatus">Placeholder модель (static/models/mashyryq.glb күтілуде)</span>
+      </div>
+      <div class="viewer-controls" id="viewerControls">
+        <button type="button" id="btnRotate" title="Айналдыруды тоқтату/жалғастыру">⟳ Айналдыру</button>
+        <button type="button" id="btnReset" title="Камераны бастапқы қалпына келтіру">⌂ Камера</button>
+        <button type="button" id="btnWire" title="Каркас режимі">▦ Каркас</button>
+        <button type="button" id="btnFull" title="Толық экран">⛶ Толық экран</button>
+      </div>
+      <p class="viewer-help muted small">Тінтуірмен: сол батырма — rotate · доңғалақ — zoom · оң батырма — pan</p>
+    </div>
+
+    <div class="two-col recon-notes">
+      <div class="glass panel reveal">
+        <h3>Модель туралы</h3>
+        <p>Қазір көрсетіліп тұрғаны — <strong>placeholder 3D модель</strong>: ортаазиялық медресе архитектурасының жалпы белгілерін (аула, күмбез, мұнаралар, құдық, бақ) шартты түрде бейнелейді. Нақты <code>.glb</code> модельді <code>static/models/mashyryq.glb</code> деген атпен салсаңыз, viewer оны автоматты жүктейді.</p>
+      </div>
+      <div class="glass panel reveal">
+        <h3>Неліктен «болжамды»?</h3>
+        <p>Ғимараттың нақты суреті, сызбасы немесе археологиялық қалдықтары туралы дерек әзірге жинақталған жоқ. Сондықтан бұл визуализация дәлелденген факт ретінде емес, <strong>зерттеу гипотезасының көрнекі үлгісі</strong> ретінде ғана ұсынылады.</p>
+        <a class="btn btn-ghost" href="{{ url_for('mashyryq') }}#derik-1887">1887 жылғы дерекке оралу</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block page_js %}
+<!-- Three.js r128 (non-module) + OrbitControls + GLTFLoader: CDN жүктелмесе fallback көрсетіледі -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="{{ url_for('static', filename='js/3d.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% from "_macros.html" import badge, photo with context %}
+
+{% block title %}Мектеп тарихы — ЦИФРЛЫҚ ШЕЖІРЕ{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <p class="hero-kicker reveal">1943 жылдан бері</p>
+    <h1 class="page-title reveal">Ақшұқырдың мектеп тарихы</h1>
+    <p class="page-lead reveal">Білім шежіресі: 1943 жылғы алғашқы мектептен қазіргі мектепке дейін.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="timeline">
+      {% for era in school_periods %}
+      <article class="tl-item reveal" id="school-{{ era.id }}">
+        <div class="tl-marker" aria-hidden="true"></div>
+        <div class="tl-card glass">
+          <div class="tl-head"><span class="tl-years">{{ era.years }}</span>{{ badge(era.evidence) }}</div>
+          <h2 class="tl-title">{{ era.title }}</h2>
+          <p class="tl-summary">{{ era.summary }}</p>
+          <details class="tl-details">
+            <summary>Толығырақ оқу</summary>
+            <p>{{ era.description }}</p>
+            {{ photo(era.image, era.title, 'Мектеп архивінен фото/құжат — кейін енгізіледі') }}
+          </details>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Алғашқы мектеп: нақтылау өрістері -->
+<section class="section section-alt">
+  <div class="container">
+    <h2 class="section-title reveal">Алғашқы мектеп туралы деректер</h2>
+    <p class="section-lead reveal">Төмендегі өрістер мектеп мұрағаты мен естеліктер арқылы толықтырылады. Расталмаған мәлімет факт ретінде көрсетілмейді.</p>
+    <div class="cards-grid">
+      <div class="nav-card glass reveal"><span class="nav-card-icon">🏫</span><h3>1943 жылы ашылғаны</h3>
+        <p>1943 жыл — Ақшұқырда алғашқы мектептің ашылған жылы. Ашылу мән-жайы мен алғашқы ғимарат туралы құжаттар жинақталуда.</p>{{ badge('written') }}</div>
+      <div class="nav-card glass reveal"><span class="nav-card-icon">🧒</span><h3>Алғашқы оқушылар</h3>
+        <p>Алғашқы түлектер тізімі — дерек қажет. Мектеп мұрағатындағы тізімдер сканерленіп, осы бөлімге енгізіледі.</p>{{ badge('needs_data') }}</div>
+      <div class="nav-card glass reveal"><span class="nav-card-icon">👩‍🏫</span><h3>Алғашқы мұғалім</h3>
+        <p>Алғашқы мұғалім(дер) туралы мәлімет ауызша тарихпен нақтыланып, құжатпен расталуы тиіс.</p>{{ badge('needs_data') }}</div>
+      <div class="nav-card glass reveal"><span class="nav-card-icon">📈</span><h3>Қазіргі мектепке дейінгі даму</h3>
+        <p>Директорлар, ғимараттар, оқушылар санының өзгеруі — мектеппен бірлесіп толықтырылатын бөлім.</p>{{ badge('research') }}</div>
+    </div>
+    <div class="glass panel reveal">
+      <h3>Фото/құжат орны</h3>
+      <div class="gallery-grid">
+        {% for caption in ['Алғашқы мектеп ғимараты', 'Алғашқы сынып', 'Мектеп құжаттары', 'Қазіргі мектеп'] %}
+        <div class="gallery-item">{{ photo(null, caption, caption + ' — дерек қажет') }}</div>
+        {% endfor %}
+      </div>
+      <p class="muted small">Дереккөз өрісі: әр фото енгізілгенде оның қайдан алынғаны (мектеп мұрағаты / отбасылық архив) көрсетіледі.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

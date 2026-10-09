@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% from "_macros.html" import badge, photo with context %}
+{% set src_map = {} %}
+{% for s in sources %}{% set _ = src_map.update({s.id: s}) %}{% endfor %}
+
+{% block title %}Ақшұқырдың тарихы — ЦИФРЛЫҚ ШЕЖІРЕ{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <p class="hero-kicker reveal">Интерактивті тарихи тізбек</p>
+    <h1 class="page-title reveal">Ақшұқырдың тарихы</h1>
+    <p class="page-lead reveal">Әр кезең дәлелдеме деңгейімен белгіленген. Сүзгі арқылы тек қажетті деңгейдегі деректерді қараңыз.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <!-- Дәлелдеме сүзгісі -->
+    <div class="filter-bar reveal" id="timelineFilters">
+      <button class="filter-btn active" data-filter="all">Барлығы</button>
+      {% for key, ev in evidence_levels.items() %}
+      <button class="filter-btn" data-filter="{{ key }}">{{ ev.icon }} {{ ev.label }}</button>
+      {% endfor %}
+    </div>
+
+    <div class="timeline" id="timeline">
+      {% for era in history %}
+      <article class="tl-item reveal" id="{{ era.id }}" data-evidence="{{ era.evidence }}">
+        <div class="tl-marker" aria-hidden="true"></div>
+        <div class="tl-card glass">
+          <div class="tl-head">
+            <span class="tl-years">{{ era.years }}</span>
+            {{ badge(era.evidence) }}
+          </div>
+          <h2 class="tl-title">{{ era.title }}</h2>
+          <p class="tl-summary">{{ era.summary }}</p>
+          <details class="tl-details">
+            <summary>Толығырақ оқу</summary>
+            <p>{{ era.description }}</p>
+            {{ photo(era.image, era.title, 'Фото/құжат орны — кейін енгізіледі') }}
+            {% if era.sources %}
+            <div class="tl-sources">
+              <strong>Дереккөздер:</strong>
+              {% for sid in era.sources %}
+                {% set s = src_map.get(sid) %}
+                {% if s %}
+                  <a class="src-chip" href="{{ url_for('sources_page') }}#{{ s.id }}" title="{{ s.source_reference }}">{{ s.title }}</a>
+                {% endif %}
+              {% endfor %}
+            </div>
+            {% else %}
+            <p class="muted small">Дереккөз: зерттеу барысында толықтырылады.</p>
+            {% endif %}
+          </details>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    <p class="muted" id="timelineEmpty" hidden>Бұл сүзгіге сәйкес кезең табылмады.</p>
+  </div>
+</section>
+{% endblock %}
+
+{% block page_js %}
+<script src="{{ url_for('static', filename='js/timeline.js') }}"></script>
+{% endblock %}

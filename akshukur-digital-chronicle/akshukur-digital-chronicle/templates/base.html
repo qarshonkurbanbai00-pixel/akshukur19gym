@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Ақшұқыр ауылының интерактивті цифрлық тарихи зерттеу жобасы">
+  <title>{% block title %}АҚШҰҚЫР — ЦИФРЛЫҚ ШЕЖІРЕ{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% block page_css %}{% endblock %}
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕌</text></svg>">
+</head>
+<body>
+
+  <!-- Loading animation -->
+  <div id="loader" aria-hidden="true">
+    <div class="loader-mark">А</div>
+    <div class="loader-text">АҚШҰҚЫР — ЦИФРЛЫҚ ШЕЖІРЕ</div>
+  </div>
+
+  <!-- Негізгі навигация -->
+  <header class="navbar" id="navbar">
+    <a class="brand" href="{{ url_for('index') }}">
+      <span class="brand-mark">А</span>
+      <span class="brand-text">АҚШҰҚЫР<small>ЦИФРЛЫҚ ШЕЖІРЕ</small></span>
+    </a>
+
+    <nav class="nav-links" id="navLinks" aria-label="Негізгі мәзір">
+      <a href="{{ url_for('index') }}" class="{{ 'active' if request.endpoint == 'index' }}">Басты бет</a>
+      <a href="{{ url_for('history') }}" class="{{ 'active' if request.endpoint == 'history' }}">Тарих</a>
+      <a href="{{ url_for('persons') }}" class="{{ 'active' if request.endpoint == 'persons' }}">Тұлғалар</a>
+      <a href="{{ url_for('mashyryq') }}" class="{{ 'active' if request.endpoint == 'mashyryq' }}">Машырық қажы</a>
+      <a href="{{ url_for('map_page') }}" class="{{ 'active' if request.endpoint == 'map_page' }}">Тарихи орындар</a>
+      <a href="{{ url_for('reconstruction') }}" class="{{ 'active' if request.endpoint == 'reconstruction' }}">3D реконструкция</a>
+      <a href="{{ url_for('school') }}" class="{{ 'active' if request.endpoint == 'school' }}">Мектеп</a>
+      <div class="nav-dropdown">
+        <button class="dropdown-toggle" type="button" aria-haspopup="true">Тағы ▾</button>
+        <div class="dropdown-menu">
+          <a href="{{ url_for('archive') }}">Цифрлық архив</a>
+          <a href="{{ url_for('oral_history') }}">Ауызша тарих</a>
+          <a href="{{ url_for('excursion') }}">Виртуалды экскурсия</a>
+          <a href="{{ url_for('research') }}">Зерттеу</a>
+          <a href="{{ url_for('sources_page') }}">Дереккөздер</a>
+        </div>
+      </div>
+      <button class="search-btn" id="searchBtn" type="button" aria-label="Іздеу">⌕ Іздеу</button>
+    </nav>
+
+    <button class="burger" id="burger" type="button" aria-label="Мәзір" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <!-- Мобильді мәзір -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="{{ url_for('index') }}">Басты бет</a>
+    <a href="{{ url_for('history') }}">Тарих</a>
+    <a href="{{ url_for('persons') }}">Тұлғалар</a>
+    <a href="{{ url_for('mashyryq') }}">Машырық қажы</a>
+    <a href="{{ url_for('map_page') }}">Тарихи орындар</a>
+    <a href="{{ url_for('reconstruction') }}">3D реконструкция</a>
+    <a href="{{ url_for('school') }}">Мектеп тарихы</a>
+    <a href="{{ url_for('archive') }}">Цифрлық архив</a>
+    <a href="{{ url_for('oral_history') }}">Ауызша тарих</a>
+    <a href="{{ url_for('excursion') }}">Виртуалды экскурсия</a>
+    <a href="{{ url_for('research') }}">Зерттеу</a>
+    <a href="{{ url_for('sources_page') }}">Дереккөздер</a>
+  </div>
+
+  <!-- Іздеу терезесі -->
+  <div class="search-overlay" id="searchOverlay" role="dialog" aria-label="Сайт бойынша іздеу">
+    <div class="search-box glass">
+      <div class="search-head">
+        <input type="search" id="searchInput" placeholder="Тарих, орын, құжат іздеу…" autocomplete="off">
+        <button type="button" id="searchClose" aria-label="Жабу">✕</button>
+      </div>
+      <div class="search-results" id="searchResults">
+        <p class="muted">Кемінде 2 әріп енгізіңіз…</p>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Футер -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <div class="brand footer-brand"><span class="brand-mark">А</span>
+          <span class="brand-text">АҚШҰҚЫР<small>ЦИФРЛЫҚ ШЕЖІРЕ</small></span>
+        </div>
+        <p class="muted">Маңғыстау облысы, Түпқараған ауданы, Ақшұқыр ауылының тарихын зерттейтін мектеп жобасы. Машырық қажыдан бүгінгі Ақшұқырға дейін.</p>
+      </div>
+      <div>
+        <h4>Бөлімдер</h4>
+        <a href="{{ url_for('history') }}">Тарих</a>
+        <a href="{{ url_for('persons') }}">Тұлғалар</a>
+        <a href="{{ url_for('mashyryq') }}">Машырық қажы</a>
+        <a href="{{ url_for('map_page') }}">Тарихи орындар</a>
+        <a href="{{ url_for('reconstruction') }}">3D реконструкция</a>
+      </div>
+      <div>
+        <h4>Зерттеу</h4>
+        <a href="{{ url_for('archive') }}">Цифрлық архив</a>
+        <a href="{{ url_for('oral_history') }}">Ауызша тарих</a>
+        <a href="{{ url_for('excursion') }}">Виртуалды экскурсия</a>
+        <a href="{{ url_for('research') }}">Зерттеу әдістемесі</a>
+        <a href="{{ url_for('sources_page') }}">Дереккөздер</a>
+      </div>
+      <div>
+        <h4>Дәлелдеме деңгейлері</h4>
+        <p class="muted small">
+          🟢 Жазба дерек · 🔵 Архив дерегі · 🟡 Ауызша дерек<br>
+          🟠 Зерттеу материалы · 🟣 3D реконструкция · ⚪ Дерек қажет
+        </p>
+        <p class="muted small">Бұл жобада нақты дәлелденбеген мәлімет факт ретінде көрсетілмейді.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© {{ current_year }} «Ақшұқыр — цифрлық шежіре» зерттеу жобасы</span>
+      <span>«Өлкенің цифрлық шежіресі» номинациясына арналған</span>
+    </div>
+  </footer>
+
+  <!-- Жалпы модальды терезе -->
+  <div class="modal" id="modal" role="dialog" aria-modal="true">
+    <div class="modal-backdrop" data-modal-close></div>
+    <div class="modal-card glass">
+      <button class="modal-close" type="button" data-modal-close aria-label="Жабу">✕</button>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- Жоғарыға оралу -->
+  <button id="backToTop" type="button" aria-label="Жоғарыға оралу">↑</button>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block page_js %}{% endblock %}
+</body>
+</html>
